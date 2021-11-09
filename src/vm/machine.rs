@@ -106,14 +106,8 @@ impl VM {
                     self.program_counter += 1;
                 }
             }
-            Instruction::Jump8(value) => {
-                self.program_counter = value as usize;
-            }
             Instruction::Jump16(byte1, byte2) => {
                 self.program_counter = (byte1 << 8 + byte2) as usize;
-            }
-            Instruction::RJump8(reg) => {
-                self.program_counter = self.registers[reg as usize] as usize;
             }
             Instruction::RJump16(reg1, reg2) => {
                 self.program_counter = (self.registers[reg1 as usize] << 8 + self.registers[reg2 as usize]) as usize;

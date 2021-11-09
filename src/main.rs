@@ -5,17 +5,17 @@ mod vm;
 mod assembler;
 
 fn main() {
-    let mut vm = VM::new(vec![
-        Instruction::Load(0x2, 0x10),
-        Instruction::SPush(0x0, 0x1, 0x2),
-        Instruction::Load(0x2, 0x04),
-        Instruction::SCopy(0x0, 0x1, 0x3),
-        Instruction::Add(0x2, 0x2, 0x3),
-        Instruction::SRep(0x0, 0x1, 0x2)
-    ]);
+    let program = assembler::assembler::assemble(std::fs::read_to_string("res\\main.mvm").expect("Failed to read file!")).expect("Failed to assembler file!");
+
+    println!("--- Program ---");
+    for instruction in program.iter() {
+        println!("{:?}", instruction);
+    }
+
+    let mut vm = VM::new(program);
     vm.run();
 
-    println!("--- Registers ---");
+    println!("\n--- Registers ---");
     vm.print_registers();
 
     println!("\n--- Stack ---");

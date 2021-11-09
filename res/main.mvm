@@ -1,0 +1,6 @@
+LOAD r2 0x10
+SPUSH r0 r1 r2
+LOAD r2 0x04
+SCOPY r0 r1 r3
+ADD r2 r2 r3
+SREP r0 r1 r2

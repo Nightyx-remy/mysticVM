@@ -1,10 +1,19 @@
 use crate::vm::instruction::Instruction;
 use std::cmp::min;
 
+/*
+Structure:
+    - Stack: 2^16 Byte
+    - MemoryMap: (Used to know available memory slots)
+    - Register: 16 Byte
+    - Program
+    - Counter: (Used to know where in the program we are)
+ */
+
 pub type Register = u8;
 pub type Byte = u8;
 
-const STACK_SIZE: usize = 2_usize.pow(16);
+const STACK_SIZE: usize = 2_usize.pow(16); // 2^16 Byte of memory (max sized allowed due to 16bit address)
 const REGISTERS: usize = 16;
 
 pub struct VM {

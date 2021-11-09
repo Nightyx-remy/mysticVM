@@ -2,6 +2,7 @@ use crate::vm::machine::VM;
 use crate::vm::instruction::Instruction;
 
 mod vm;
+mod assembler;
 
 fn main() {
     let mut vm = VM::new(vec![

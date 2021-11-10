@@ -57,30 +57,30 @@ pub enum Argument {
 }
 
 fn get_value(parts: &mut Split<&str>, instruction: usize, arg_number: usize, used_labels: &mut Vec<(String, usize, usize, usize)>) -> Result<Argument, AssemblerError> {
-    if let Some(text) = parts.next() {
+    return if let Some(text) = parts.next() {
         if text == "NEXT0" {
             let address = instruction + 1;
-            return Ok(Argument::Byte(((address << 8) & 0xFF) as u8));
+            Ok(Argument::Byte(((address << 8) & 0xFF) as u8))
         } else if text == "NEXT1" {
             let address = instruction + 1;
-            return Ok(Argument::Byte((address & 0xFF) as u8));
+            Ok(Argument::Byte((address & 0xFF) as u8))
         } else if text.starts_with("0x") {
-            return match u8::from_str_radix(&text[2..text.len()], 16) {
+            match u8::from_str_radix(&text[2..text.len()], 16) {
                 Ok(result) => Ok(Argument::Byte(result)),
                 Err(err) => Err(AssemblerError::ParseIntError(err)),
             }
         } else if text.starts_with("0b") {
-            return match u8::from_str_radix(&text[2..text.len()], 2) {
+            match u8::from_str_radix(&text[2..text.len()], 2) {
                 Ok(result) => Ok(Argument::Byte(result)),
                 Err(err) => Err(AssemblerError::ParseIntError(err)),
             }
         } else if text.starts_with("0d") {
-            return match u8::from_str_radix(&text[2..text.len()], 10) {
+            match u8::from_str_radix(&text[2..text.len()], 10) {
                 Ok(result) => Ok(Argument::Byte(result)),
                 Err(err) => Err(AssemblerError::ParseIntError(err)),
             }
         } else if text.starts_with("r") {
-            return match u8::from_str_radix(&text[1..text.len()], 16) {
+            match u8::from_str_radix(&text[1..text.len()], 16) {
                 Ok(result) => Ok(Argument::Register(result)),
                 Err(err) => Err(AssemblerError::ParseIntError(err)),
             }
@@ -93,12 +93,12 @@ fn get_value(parts: &mut Split<&str>, instruction: usize, arg_number: usize, use
             } else {
                 return Err(AssemblerError::WrongArgument);
             }
-            return Ok(Argument::Byte(0));
+            Ok(Argument::Byte(0))
         } else {
-            return Err(AssemblerError::WrongArgument);
+            Err(AssemblerError::WrongArgument)
         }
     } else {
-        return Err(AssemblerError::MissingArgument);
+        Err(AssemblerError::MissingArgument)
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::vm::machine::{Register, Byte};
+use crate::vm::machine::{Register, Byte, REGISTERS, IGNORE};
 use std::fmt::{Debug, Formatter};
 
 pub enum Instruction {
@@ -31,7 +31,20 @@ impl Debug for Instruction {
             Instruction::Mul(a, b, c) => write!(f, "MUL r{:X} r{:X} r{:X}", a, b, c)?,
             Instruction::Div(a, b, c) => write!(f, "DIV r{:X} r{:X} r{:X}", a, b, c)?,
             Instruction::Cmp(a, b, c) => write!(f, "CMP r{:X} r{:X} r{:X}", a, b, c)?,
-            Instruction::SPush(a, b, c) => write!(f, "SPUSH r{:X} r{:X} r{:X}", a, b, c)?,
+            Instruction::SPush(a, b, c) => {
+                write!(f, "SPUSH ")?;
+                if *a >= IGNORE {
+                    write!(f, "_ ")?;
+                } else {
+                    write!(f, "r{:X}", a)?;
+                }
+                if *b >= IGNORE {
+                    write!(f, "_ ")?;
+                } else {
+                    write!(f, "r{:X}", b)?;
+                }
+                write!(f, "r{:X}", c)?;
+            },
             Instruction::SCopy(a, b, c) => write!(f, "SCOPY r{:X} r{:X} r{:X}", a, b, c)?,
             Instruction::SPop(a, b, c) => write!(f, "SPOP r{:X} r{:X} r{:X}", a, b, c)?,
             Instruction::SRep(a, b, c) => write!(f, "SREP r{:X} r{:X} r{:X}", a, b, c)?,

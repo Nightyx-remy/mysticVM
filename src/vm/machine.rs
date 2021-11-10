@@ -13,8 +13,10 @@ Structure:
 pub type Register = u8;
 pub type Byte = u8;
 
-const STACK_SIZE: usize = 2_usize.pow(16); // 2^16 Byte of memory (max sized allowed due to 16bit address)
-const REGISTERS: usize = 16;
+pub const STACK_SIZE: usize = 2_usize.pow(16); // 2^16 Byte of memory (max sized allowed due to 16bit address)
+pub const REGISTERS: usize = 16;
+
+pub const IGNORE: u8 = REGISTERS as u8;
 
 pub struct VM {
     stack: [u8; STACK_SIZE],
@@ -71,8 +73,12 @@ impl VM {
             Instruction::SPush(reg_addr1, reg_addr2, reg_value) => {
                 let map = self.stack_memory_map.get_mut(0).unwrap();
                 self.stack[map.0] = self.registers[reg_value as usize];
-                self.registers[reg_addr1 as usize] = ((map.0 >> 8) & 0xFF) as u8;
-                self.registers[reg_addr2 as usize] = (map.0 & 0xFF) as u8;
+                if reg_addr1 < REGISTERS as u8 {
+                    self.registers[reg_addr1 as usize] = ((map.0 >> 8) & 0xFF) as u8;
+                }
+                if reg_addr2 < REGISTERS as u8 {
+                    self.registers[reg_addr2 as usize] = (map.0 & 0xFF) as u8;
+                }
                 if map.1 > 1 {
                     map.1 -= 1;
                     map.0 += 1;

@@ -29,6 +29,7 @@ use std::num::ParseIntError;
 use std::str::Split;
 use std::fmt::{Debug, Formatter};
 use std::collections::HashMap;
+use crate::vm::machine::REGISTERS;
 
 pub enum AssemblerError {
     ParseIntError(ParseIntError),
@@ -64,6 +65,8 @@ fn get_value(parts: &mut Split<&str>, instruction: usize, arg_number: usize, use
         } else if text == "NEXT1" {
             let address = instruction + 1;
             Ok(Argument::Byte((address & 0xFF) as u8))
+        } else if text == "_" {
+            Ok(Argument::Register(REGISTERS as u8))
         } else if text.starts_with("0x") {
             match u8::from_str_radix(&text[2..text.len()], 16) {
                 Ok(result) => Ok(Argument::Byte(result)),
